@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Elementary Row Operations bilingual pre-class topic demo">
+  <title>Elementary Row Operations · Linear Algebra Bridge</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="Linear Algebra Bridge 首页">
+      <span class="brand-mark" aria-hidden="true">[·]</span>
+      <span><strong>Linear Algebra Bridge</strong><small>线性代数双语预习</small></span>
+    </a>
+    <div class="top-actions">
+      <span class="page-kind">PROCEDURE · 方法</span>
+      <a href="#quick-check">开始自测 →</a>
+      <button class="directory-button" id="open-directory" aria-controls="mobile-drawer" aria-expanded="false">☰ 目录</button>
+    </div>
+  </header>
+
+  <div class="page-shell" id="top">
+    <aside class="sidebar" aria-label="线性代数课程知识地图">
+      <p class="nav-eyebrow">COURSE MAP · 课程地图</p>
+      <div class="chapter active"><span>01</span><div><strong>Prerequisites and Linear Systems</strong><small>预备知识和线性方程组初步</small></div></div>
+      <nav aria-label="Chapter 1 sections and topics">
+        <div class="section-link muted"><b>1.1</b> Sets and Mappings</div>
+        <div class="section-link current"><b>1.2</b> Solving Systems &amp; Gaussian Elimination</div>
+        <div class="topic-link active-topic"><span>•</span><div><strong>Elementary Row Operations</strong><small>初等行变换与行阶梯形矩阵</small></div></div>
+        <div class="section-link muted"><b>1.3</b> Extended Reading</div>
+      </nav>
+      <div class="preview-note"><b>✦ 预习建议</b><p>先听术语，再把英文指令与矩阵动作对应起来。</p></div>
+    </aside>
+
+    <main>
+      <section class="hero section-wrap" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="breadcrumb">CHAPTER 1 · SECTION 1.2 <span>大学线性代数 · 线性方程组</span></p>
+          <h1 id="page-title">Elementary Row Operations</h1>
+          <h2 class="chinese-title">初等行变换</h2>
+          <p class="secondary-title">Row Echelon Form · 行阶梯形矩阵</p>
+          <p class="lead">Elementary row operations change the rows of a matrix without changing the solution set of the corresponding linear system.</p>
+          <p class="support">初等行变换作用于矩阵的整行，并保持对应线性方程组的解集不变。本页只帮助你听懂和看懂这一数学动作。</p>
+          <div class="pronunciation-row">
+            <button class="audio-button" data-speak="Elementary row operations" aria-label="播放音频：Elementary row operations">▶ Listen</button>
+            <div><strong>Elementary row operations</strong><span>/ˌelɪˈmentəri roʊ ˌɑːpəˈreɪʃənz/</span></div>
+          </div>
+          <div class="pronunciation-row">
+            <button class="audio-button" data-speak="Row echelon form" aria-label="播放音频：Row echelon form">▶ Listen</button>
+            <div><strong>Row echelon form</strong><span>/roʊ ˈeʃəlɑːn fɔːrm/</span></div>
+          </div>
+          <p id="audio-status" class="audio-status" role="status" aria-live="polite">音频使用设备上的英文语音。</p>
+        </div>
+        <article class="hero-card" aria-label="Row two is replaced by row two minus two times row one">
+          <p class="card-eyebrow">ONE ROW OPERATION · 一次行变换</p>
+          <div class="matrix-pair">
+            <div><span class="matrix-label">BEFORE</span><div class="matrix" aria-label="augmented matrix: row one 1, 1, 3; row two 2, 1, 4"><span class="row row-one"><i>1</i><i>1</i><i class="aug">3</i></span><span class="row row-two"><i>2</i><i>1</i><i class="aug">4</i></span></div></div>
+            <div class="hero-operation"><strong>R₂ ← R₂ − 2R₁</strong><span>entire row · 整行</span><b aria-hidden="true">→</b></div>
+            <div><span class="matrix-label">AFTER</span><div class="matrix result" aria-label="augmented matrix: row one 1, 1, 3; row two 0, negative 1, negative 2"><span class="row row-one"><i>1</i><i>1</i><i class="aug">3</i></span><span class="row changed"><i>0</i><i>−1</i><i class="aug">−2</i></span></div></div>
+          </div>
+          <p class="legend"><span class="navy-dot"></span> R₁ stays unchanged <span class="red-dot"></span> every entry in R₂ changes</p>
+        </article>
+      </section>
+
+      <section class="numbered section-wrap" id="meaning">
+        <span class="section-number">02</span><div class="section-heading"><p>UNDERSTAND IN LAYERS · 分层理解</p><h2>What operation are we trying to perform?</h2><span>我们在对矩阵做什么？</span></div>
+        <div class="layer-grid">
+          <article><b>EN · ACADEMIC</b><h3>Act on a whole row</h3><p>An elementary row operation interchanges two rows, scales one row by a nonzero number, or adds a multiple of one row to another.</p></article>
+          <article><b>中 · 专业解释</b><h3>三种合法的初等行变换</h3><p>交换两行；用非零数乘某一行；将某一行的倍数加到另一行。每次运算都作用于整行。</p></article>
+          <article><b>懂 · 直觉提示</b><h3>听动词，找动作</h3><p>听到 <em>interchange</em>、<em>multiply</em> 或 <em>add a multiple</em>，先判断老师要求哪一种整行操作。</p></article>
+        </div>
+      </section>
+
+      <section class="numbered section-wrap notation-section" id="notation">
+        <span class="section-number">03</span><div class="section-heading"><p>READ THE NOTATION · 符号读法</p><h2>See the symbol. Hear the instruction.</h2><span>看见符号，也能听懂老师怎么读</span></div>
+        <div class="notation-list">
+          <article><code>R₁ ↔ R₂</code><div><h3>Interchange row one and row two.</h3><p>交换第一行与第二行。</p></div><button class="icon-audio audio-button" data-speak="Interchange row one and row two." aria-label="播放音频：Interchange row one and row two">🔊</button></article>
+          <article><code>R₂ ← 3R₂</code><div><h3>Multiply row two by three.</h3><p>用 3 乘第二行。</p></div><button class="icon-audio audio-button" data-speak="Multiply row two by three." aria-label="播放音频：Multiply row two by three">🔊</button></article>
+          <article><code>R₂ ← R₂ − 2R₁</code><div><h3>Replace row two by row two minus two times row one.</h3><p>用第二行减去第一行的两倍，替换第二行。</p><small>Lecture variant: “Add negative two times row one to row two.” 两句描述同一个行变换。</small></div><button class="icon-audio audio-button" data-speak="Replace row two by row two minus two times row one." aria-label="播放音频：Replace row two by row two minus two times row one">🔊</button></article>
+        </div>
+      </section>
+
+      <section class="numbered section-wrap" id="demo">
+        <span class="section-number">04</span><div class="section-heading"><p>CONCEPT IN ACTION · 动作演示</p><h2>What does “eliminate the entry below the pivot” mean?</h2><span>“消去主元下方的元素”究竟发生了什么？</span></div>
+        <div class="demo-card">
+          <div class="demo-topline"><span>2 × 3 AUGMENTED MATRIX</span><strong id="step-count">STEP 1 OF 4</strong></div>
+          <div class="step-copy" aria-live="polite">
+            <p id="step-phase">IDENTIFY · 识别</p>
+            <h3 id="step-english">Use row one as the pivot row.</h3>
+            <p id="step-chinese">把第一行作为主元行。</p>
+            <div class="step-notation" id="step-notation">Pivot row: R₁</div>
+            <button id="step-audio" class="audio-button">▶ Listen to this instruction</button>
+          </div>
+          <div class="demo-visual" id="demo-visual" role="img" aria-label="Step 1: use row one as the pivot row">
+            <span class="visual-label">MATRIX STATE · 矩阵状态</span>
+            <div id="animated-matrix" class="matrix demo-matrix"></div>
+            <p id="change-note">R₁ is the pivot row; R₂ is the row we will change.</p>
+          </div>
+          <div class="step-controls">
+            <button id="previous-step">← Previous</button>
+            <div class="step-dots" role="group" aria-label="直接选择动画步骤">
+              <button data-step="0" aria-label="动画步骤 1" aria-current="step">1</button><button data-step="1" aria-label="动画步骤 2">2</button><button data-step="2" aria-label="动画步骤 3">3</button><button data-step="3" aria-label="动画步骤 4">4</button>
+            </div>
+            <button id="next-step">Next →</button>
+            <button id="replay-step">↻ Replay</button>
+          </div>
+          <p class="motion-note">减少动态效果时，四个步骤仍以完整静态状态呈现。</p>
+        </div>
+      </section>
+
+      <section class="numbered section-wrap" id="vocabulary">
+        <span class="section-number">05</span><div class="section-heading"><p>KEY VOCABULARY · 核心词汇</p><h2>Words you need to hear</h2><span>上课听到就能立刻对应</span></div>
+        <div class="vocab-grid" id="vocab-grid"></div>
+        <div class="listen-strip"><b>ALSO LISTEN FOR · 也要听懂</b><span>row · 行</span><span>column · 列</span><span>entry · 元素</span><span>leading entry · 首非零元</span><span>pivot position · 主元位置</span><span>augmented matrix · 增广矩阵</span></div>
+      </section>
+
+      <section class="numbered section-wrap" id="echelon">
+        <span class="section-number">06</span><div class="section-heading"><p>VISUAL RECOGNITION · 视觉识别</p><h2>Recognize row echelon form</h2><span>认出“阶梯”，不展开完整消元课程</span></div>
+        <div class="echelon-card">
+          <div class="matrix result" aria-label="row echelon form example"><span class="row"><i class="pivot">1</i><i>1</i><i class="aug">3</i></span><span class="row"><i>0</i><i class="pivot">−1</i><i class="aug">−2</i></span></div>
+          <ol><li>Zero rows, if any, are below nonzero rows. <small>零行位于非零行下方。</small></li><li>Each leading entry is to the right of the one above. <small>每行首非零元位于上一行首非零元的右侧。</small></li><li>Entries below a leading entry are zero. <small>首非零元下方的元素为 0。</small></li></ol>
+        </div>
+      </section>
+
+      <section class="numbered section-wrap" id="classroom">
+        <span class="section-number">07</span><div class="section-heading"><p>CLASSROOM ENGLISH · 课堂英语</p><h2>Hear the lesson before class</h2><span>七句高频课堂指令</span></div>
+        <div class="classroom-grid" id="classroom-grid"></div>
+      </section>
+
+      <section class="numbered section-wrap" id="quick-check">
+        <span class="section-number">08</span><div class="section-heading"><p>QUICK CHECK · 理解自测</p><h2>Can you connect language to action?</h2><span>四题都很短，重点是英语识别</span></div>
+        <div class="quiz-card">
+          <div class="quiz-progress"><div id="quiz-dots"></div><span id="quiz-count">1 / 4</span></div>
+          <p class="quiz-type" id="quiz-type"></p><h3 id="quiz-question"></h3>
+          <div id="quiz-options" class="quiz-options"></div>
+          <div id="quiz-feedback" class="quiz-feedback" role="status" aria-live="polite"></div>
+          <div class="quiz-footer"><span id="completed-count">已完成 0 / 4</span><button id="next-question">下一题 →</button></div>
+        </div>
+      </section>
+
+      <section class="summary section-wrap">
+        <p>BEFORE CLASS SUMMARY · 课前总结</p><h2>You’re ready to follow the language.</h2><span>你已经为听懂课堂语言做好准备。</span>
+        <ul><li>✓ I can recognize the names of the three elementary row operations.</li><li>✓ I can understand common row-operation instructions in English.</li><li>✓ I can read a basic row-operation symbol with support.</li><li>✓ I can recognize the basic staircase pattern of row echelon form.</li></ul>
+      </section>
+    </main>
+  </div>
+
+  <div class="drawer-backdrop" id="drawer-backdrop" hidden></div>
+  <aside class="mobile-drawer" id="mobile-drawer" aria-label="移动端课程目录" aria-hidden="true">
+    <div class="drawer-head"><strong>Course Map · 课程地图</strong><button id="close-directory" aria-label="关闭课程目录">✕</button></div>
+    <div class="chapter active"><span>01</span><div><strong>Prerequisites and Linear Systems</strong><small>预备知识和线性方程组初步</small></div></div>
+    <div class="section-link current"><b>1.2</b> Solving Systems &amp; Gaussian Elimination</div>
+    <a class="topic-link active-topic" href="#top"><span>•</span><div><strong>Elementary Row Operations</strong><small>初等行变换与行阶梯形矩阵</small></div></a>
+  </aside>
+  <footer><span class="brand-mark">[·]</span><strong>Linear Algebra Bridge</strong><small>线性代数双语预习 · Single Topic Demo</small></footer>
+  <script type="module" src="router.js"></script>
+</body>
+</html>

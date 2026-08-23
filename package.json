@@ -1,0 +1,13 @@
+{
+  "name": "linear-algebra-bridge-topic-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs",
+    "build": "node scripts/build.mjs",
+    "typecheck": "node --check app.js && node --check router.js && node --check chapter1-data.js && node --check chapter2-data.js && node --check remaining-data.js && node --check server.mjs && node --check scripts/build.mjs",
+    "lint": "node scripts/lint.mjs",
+    "test": "node --test tests/*.test.mjs"
+  }
+}
