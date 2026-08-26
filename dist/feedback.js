@@ -49,6 +49,7 @@ const showContext = () => {
 
 const setOpen = open => {
   if (open) {
+    if (!document.querySelector('#ai-tutor-panel')?.hidden) document.querySelector('#close-ai-tutor')?.click();
     lastFocus = document.activeElement;
     showContext();
     modal.hidden = false;

@@ -153,6 +153,36 @@
     <div class="section-link current"><b>1.2</b> Solving Systems &amp; Gaussian Elimination</div>
     <a class="topic-link active-topic" href="#top"><span>•</span><div><strong>Elementary Row Operations</strong><small>初等行变换与行阶梯形矩阵</small></div></a>
   </aside>
+  <div class="ai-tutor-ui" id="ai-tutor-ui">
+    <button class="ai-trigger" id="open-ai-tutor" type="button" aria-controls="ai-tutor-panel" aria-expanded="false">✦ AI Tutor · 智能助教</button>
+    <div class="ai-backdrop" id="ai-backdrop" hidden></div>
+    <section class="ai-panel" id="ai-tutor-panel" role="dialog" aria-modal="true" aria-labelledby="ai-title" hidden>
+      <div class="ai-panel-head">
+        <div><p class="ai-kicker">LOCAL AI · 本地运行</p><h2 id="ai-title">Linear Algebra Tutor</h2></div>
+        <button class="ai-close" id="close-ai-tutor" type="button" aria-label="关闭 AI 助教">✕</button>
+      </div>
+      <p class="ai-intro">模型在你的设备上运行，不使用站长的付费 API。首次启用需要下载较大的模型文件。</p>
+      <div class="ai-setup" id="ai-setup">
+        <button class="ai-load" id="load-ai-model" type="button">在此设备启用本地 AI</button>
+        <progress id="ai-progress" max="100" value="0" hidden></progress>
+        <p class="ai-status" id="ai-status" role="status" aria-live="polite">推荐使用最新版 Chrome 或 Edge，并保持页面打开。</p>
+      </div>
+      <div class="ai-messages" id="ai-messages" aria-live="polite">
+        <p class="ai-message assistant">你好！模型准备好后，你可以针对当前线性代数页面提问。</p>
+      </div>
+      <form class="ai-form" id="ai-form">
+        <label class="sr-only" for="ai-question">向 AI 助教提问</label>
+        <textarea id="ai-question" rows="2" maxlength="800" placeholder="例如：为什么初等行变换不改变解集？" disabled required></textarea>
+        <button id="ai-send" type="submit" disabled>发送</button>
+      </form>
+      <div class="ai-actions">
+        <button id="ai-stop" type="button" disabled>停止生成</button>
+        <button id="ai-clear" type="button">清空对话</button>
+        <a href="https://chat.deepseek.com/" target="_blank" rel="noopener">打开 DeepSeek ↗</a>
+      </div>
+      <p class="ai-note">AI 可能出错，请核对课程内容。对话不会保存到本站数据库。</p>
+    </section>
+  </div>
   <div class="feedback-ui" id="feedback-ui">
     <button class="feedback-trigger" id="open-feedback" type="button" aria-controls="feedback-modal" aria-expanded="false">✉ Feedback · 留言</button>
     <div class="feedback-backdrop" id="feedback-backdrop" hidden></div>
@@ -177,5 +207,6 @@
   <footer><span class="brand-mark">[·]</span><strong>Linear Algebra Bridge</strong><small>线性代数双语预习 · Single Topic Demo</small></footer>
   <script type="module" src="router.js"></script>
   <script type="module" src="feedback.js"></script>
+  <script type="module" src="ai-tutor.js"></script>
 </body>
 </html>
