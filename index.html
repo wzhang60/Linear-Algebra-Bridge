@@ -153,7 +153,29 @@
     <div class="section-link current"><b>1.2</b> Solving Systems &amp; Gaussian Elimination</div>
     <a class="topic-link active-topic" href="#top"><span>•</span><div><strong>Elementary Row Operations</strong><small>初等行变换与行阶梯形矩阵</small></div></a>
   </aside>
+  <div class="feedback-ui" id="feedback-ui">
+    <button class="feedback-trigger" id="open-feedback" type="button" aria-controls="feedback-modal" aria-expanded="false">✉ Feedback · 留言</button>
+    <div class="feedback-backdrop" id="feedback-backdrop" hidden></div>
+    <section class="feedback-modal" id="feedback-modal" role="dialog" aria-modal="true" aria-labelledby="feedback-title" aria-describedby="feedback-context" hidden>
+      <div class="feedback-modal-head">
+        <div><p class="feedback-kicker">FEEDBACK · 反馈</p><h2 id="feedback-title">Tell me what would help.</h2></div>
+        <button class="feedback-close" id="close-feedback" type="button" aria-label="关闭反馈窗口">✕</button>
+      </div>
+      <p class="feedback-intro">欢迎告诉我哪里清楚、哪里需要改进，或你希望增加什么内容。</p>
+      <p class="feedback-context" id="feedback-context"></p>
+      <form id="feedback-form">
+        <label for="feedback-name">姓名或昵称 <span>必填</span></label>
+        <input id="feedback-name" name="display_name" type="text" maxlength="80" autocomplete="nickname" required placeholder="例如：小林 / Alex">
+        <label for="feedback-message">你的反馈 <span>必填</span></label>
+        <textarea id="feedback-message" name="message" rows="6" maxlength="4000" required placeholder="写下你的建议、问题或学习感受……"></textarea>
+        <p class="feedback-note">不需要注册账号。请不要在留言中填写密码或其他敏感信息。</p>
+        <p class="feedback-status" id="feedback-status" role="status" aria-live="polite"></p>
+        <button class="feedback-submit" id="feedback-submit" type="submit">提交反馈 →</button>
+      </form>
+    </section>
+  </div>
   <footer><span class="brand-mark">[·]</span><strong>Linear Algebra Bridge</strong><small>线性代数双语预习 · Single Topic Demo</small></footer>
   <script type="module" src="router.js"></script>
+  <script type="module" src="feedback.js"></script>
 </body>
 </html>
