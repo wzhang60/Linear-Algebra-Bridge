@@ -4,6 +4,7 @@ import {
   InterruptableStoppingCriteria,
   TextStreamer
 } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.1/+esm';
+import { selectAiOutput } from './ai-tutor-output.js';
 
 const MODEL_ID = 'onnx-community/DeepSeek-R1-Distill-Qwen-1.5B-ONNX';
 const stoppingCriteria = new InterruptableStoppingCriteria();
@@ -42,6 +43,8 @@ const generate = async messages => {
   });
   const endThinkingToken = tokenizer.encode('</think>', { add_special_tokens: false })[0];
   let answering = false;
+  let generatedText = '';
+  let answerText = '';
   const streamer = new TextStreamer(tokenizer, {
     skip_prompt: true,
     skip_special_tokens: true,
@@ -49,7 +52,11 @@ const generate = async messages => {
       if (tokens[0] === endThinkingToken) answering = true;
     },
     callback_function: output => {
-      if (answering) self.postMessage({ status: 'update', output });
+      generatedText += output;
+      if (answering) {
+        answerText += output;
+        self.postMessage({ status: 'update', output });
+      }
     }
   });
   self.postMessage({ status: 'start' });
@@ -61,7 +68,7 @@ const generate = async messages => {
     streamer,
     stopping_criteria: stoppingCriteria
   });
-  self.postMessage({ status: 'complete' });
+  self.postMessage({ status: 'complete', ...selectAiOutput(generatedText, answerText) });
 };
 
 self.addEventListener('message', async ({ data }) => {

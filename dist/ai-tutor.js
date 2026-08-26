@@ -48,7 +48,7 @@ const setGenerating = value => {
 const pageContext = () => {
   const title = document.querySelector('#page-title')?.textContent || document.title;
   const text = document.querySelector('main')?.innerText.replace(/\s+/g, ' ').slice(0, 4500) || '';
-  return `你是 Linear Algebra Bridge 的双语线性代数助教。请优先根据当前课程页面回答，解释适合初学者，必要时同时给出中英文术语。不要假装确定；不确定时明确说明。\n当前主题：${title}\n当前页面摘要：${text}`;
+  return `你是 Linear Algebra Bridge 的双语线性代数助教。请优先根据当前课程页面回答，解释适合初学者，必要时同时给出中英文术语。直接给出最终答案，不展示思考过程，不输出 <think> 标签；先用一句话回答核心问题，再用不超过 200 字补充解释。不要假装确定；不确定时明确说明。\n当前主题：${title}\n当前页面摘要：${text}`;
 };
 
 const open = value => {
@@ -91,8 +91,16 @@ const handleWorkerMessage = ({ data }) => {
     assistantBubble.textContent = assistantText || '正在思考……';
     scrollMessages();
   } else if (data.status === 'complete') {
-    if (!assistantText) assistantBubble.textContent = '模型没有生成可显示的回答，请换一种问法。';
-    conversation.push({ role: 'assistant', content: assistantBubble.textContent });
+    const savedText = data.output || assistantText;
+    if (savedText) {
+      assistantText = savedText;
+      assistantBubble.textContent = data.usedFallback
+        ? `${savedText}\n\n（模型未完成正式答案，以上为已生成内容。）`
+        : savedText;
+    } else {
+      assistantBubble.textContent = '模型没有生成内容，请换一种问法。';
+    }
+    conversation.push({ role: 'assistant', content: savedText || assistantBubble.textContent });
     setGenerating(false);
     setStatus('回答完成。');
     questionInput.focus();
