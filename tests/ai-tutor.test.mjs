@@ -10,6 +10,7 @@ const build = await readFile('scripts/build.mjs', 'utf8');
 test('local AI tutor is available without a paid API key', () => {
   assert.match(html, /id="open-ai-tutor"/);
   assert.match(html, /src="ai-tutor\.js"/);
+  assert.match(html, /1\.3GB/);
   assert.match(tutor, /new Worker\('\.\/ai-tutor-worker\.js'/);
   assert.match(worker, /DeepSeek-R1-Distill-Qwen-1\.5B-ONNX/);
   assert.match(worker, /device: 'webgpu'/);
