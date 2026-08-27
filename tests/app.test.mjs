@@ -30,6 +30,13 @@ test('audio and reduced motion support exist', () => {
   assert.match(css, /prefers-reduced-motion/);
 });
 
+test('quiz feedback is bilingual and rewards a perfect run', () => {
+  assert.match(html, /quiz-question-zh/);
+  assert.match(html, /quiz-bingo/);
+  assert.match(js, /quizPromptEnglish/);
+  assert.match(js, /answers\.every/);
+});
+
 test('review corrections remain in place', () => {
   assert.doesNotMatch(html, /article class="featured"/);
   assert.match(css, /\.demo-card \{[^}]*border: 1px solid #8ea7b7/s);
@@ -45,4 +52,7 @@ test('the router preserves eight modules and supports adaptive Section 04 intera
   assert.match(router, /topic\.activityMode === 'sequence'/);
   assert.doesNotMatch(router, /FOUR-STEP LANGUAGE DEMO/);
   assert.match(router, /<span class="section-number">08<\/span>/);
+  assert.match(router, /data-chapter-toggle/);
+  assert.match(router, /quiz-question-zh/);
+  assert.match(router, /quiz-bingo/);
 });

@@ -38,17 +38,23 @@ function renderNavigation() {
   document.querySelector('.sidebar > .chapter')?.remove();
   const nav = chapters.map(chapter => {
     const active = chapter.number === currentChapter;
-    const chapterCard = `<a class="chapter ${active ? 'active' : ''}" href="${topicHref(chapter.start)}" ${active ? 'aria-current="true"' : ''}><span>${String(chapter.number).padStart(2, '0')}</span><div><strong>${chapter.title}</strong><small>${chapter.zh}</small></div></a>`;
-    if (!active || !currentTopic) return chapterCard;
     const sectionNav = chapter.sections.map(section => {
-      const activeSection = section.id === currentTopic.section;
+      const activeSection = Boolean(currentTopic && section.id === currentTopic.section);
       const sectionTopics = chapter.topics.filter(topic => topic.section === section.id);
-      return `<div class="section-link ${activeSection ? 'current' : 'muted'} ${section.extended ? 'extended' : ''}"><b>${section.id}</b> ${section.title}<small>${section.zh}</small></div><div class="topic-nav-group">${sectionTopics.map(topic => renderTopicLink(topic, topic.slug === currentTopic.slug)).join('')}</div>`;
+      return `<div class="section-link ${activeSection ? 'current' : 'muted'} ${section.extended ? 'extended' : ''}"><b>${section.id}</b> ${section.title}<small>${section.zh}</small></div><div class="topic-nav-group">${sectionTopics.map(topic => renderTopicLink(topic, topic.slug === currentTopic?.slug)).join('')}</div>`;
     }).join('');
-    return `${chapterCard}<div class="chapter-sections">${sectionNav}</div>`;
+    const expanded = Boolean(active && currentTopic);
+    return `<div class="chapter-group"><div class="chapter-row"><a class="chapter ${active ? 'active' : ''}" href="${topicHref(chapter.start)}" ${active ? 'aria-current="true"' : ''}><span>${String(chapter.number).padStart(2, '0')}</span><div><strong>${chapter.title}</strong><small>${chapter.zh}</small></div></a><button class="chapter-toggle" type="button" data-chapter-toggle aria-expanded="${expanded}" aria-label="${expanded ? '折叠' : '展开'}第 ${chapter.number} 章目录"><span aria-hidden="true">${expanded ? '−' : '+'}</span></button></div><div class="chapter-sections"${expanded ? '' : ' hidden'}>${sectionNav}</div></div>`;
   }).join('');
   document.querySelector('.sidebar nav').innerHTML = nav;
   document.querySelector('#mobile-drawer').innerHTML = `<div class="drawer-head"><strong>Course Map · 课程地图</strong><button id="close-directory" aria-label="关闭课程目录">✕</button></div><nav aria-label="${currentChapter ? `Chapter ${currentChapter}` : 'Course'} mobile topics">${nav}</nav>`;
+  document.querySelectorAll('[data-chapter-toggle]').forEach(toggle => toggle.addEventListener('click', () => {
+    const expanded = toggle.getAttribute('aria-expanded') !== 'true';
+    toggle.setAttribute('aria-expanded', String(expanded));
+    toggle.setAttribute('aria-label', `${expanded ? '折叠' : '展开'}第 ${toggle.closest('.chapter-group').querySelector('.chapter > span').textContent} 章目录`);
+    toggle.querySelector('span').textContent = expanded ? '−' : '+';
+    toggle.closest('.chapter-group').querySelector('.chapter-sections').hidden = !expanded;
+  }));
   document.querySelector('.brand').href = './';
   const familyZh = { Concept: '概念', Procedure: '方法', Structure: '结构', Transformation: '变换' };
   document.querySelector('.page-kind').textContent = currentTopic ? `${currentTopic.family.toUpperCase()} · ${familyZh[currentTopic.family] || '主题'}` : 'COURSE MAP · 课程地图';
@@ -62,6 +68,19 @@ function renderNavigation() {
 function audioButton(text, label = 'Listen') {
   const visibleLabel = label === '🔊' ? '🔊' : `▶ ${label}`;
   return `<button class="audio-button" data-speak="${text.replaceAll('"', '&quot;')}" aria-label="播放音频：${text.replaceAll('"', '&quot;')}">${visibleLabel}</button>`;
+}
+
+function quizPromptEnglish(item, topic) {
+  if (item.questionEnglish) return item.questionEnglish;
+  const type = item.type.toLowerCase();
+  const quoted = item.question.match(/[“"]([^”"]+)[”"]/)?.[1];
+  if (type.includes('term match')) return `Which Chinese term matches “${quoted || topic?.title || 'the English term'}”?`;
+  if (type.includes('read')) return 'How should we read or interpret this notation?';
+  if (type.includes('classroom')) return 'What action does this classroom instruction ask for?';
+  if (type.includes('sequence')) return 'What should happen first in this sequence?';
+  if (type.includes('condition')) return 'Which condition or action should be checked first?';
+  if (type.includes('visual')) return 'Which visual pattern matches the definition?';
+  return 'Which statement best matches the concept?';
 }
 
 function renderActivity(topic) {
@@ -158,7 +177,7 @@ function renderGenericPage(topic) {
 
     <section class="numbered section-wrap" id="quick-check">
       <span class="section-number">08</span><div class="section-heading"><p>QUICK CHECK · 理解自测</p><h2>Can you connect language to meaning?</h2><span>短题检查术语、课堂英语和最小概念</span></div>
-      <div class="quiz-card"><div class="quiz-progress"><div id="quiz-dots"></div><span id="quiz-count"></span></div><p class="quiz-type" id="quiz-type"></p><h3 id="quiz-question"></h3><div id="quiz-options" class="quiz-options"></div><div id="quiz-feedback" class="quiz-feedback" role="status" aria-live="polite"></div><div class="quiz-footer"><span id="completed-count"></span><button id="next-question">下一题 →</button></div></div>
+      <div class="quiz-card"><div class="quiz-progress"><div id="quiz-dots"></div><span id="quiz-count"></span></div><p class="quiz-type" id="quiz-type"></p><h3 id="quiz-question"></h3><p id="quiz-question-zh" class="quiz-question-zh"></p><div id="quiz-options" class="quiz-options"></div><div id="quiz-feedback" class="quiz-feedback" role="status" aria-live="polite"></div><div id="quiz-bingo" class="quiz-bingo" role="status" aria-live="polite" hidden><span aria-hidden="true">🎉</span><strong>Bingo! 全部答对了！</strong><small>Great job · 继续保持</small></div><div class="quiz-footer"><span id="completed-count"></span><button id="next-question">下一题 →</button></div></div>
     </section>
 
     <section class="summary section-wrap">
@@ -270,11 +289,13 @@ function setupSpeech() {
 
 function setupQuiz(topic) {
   let current = 0;
+  let bingoShown = false;
   const answers = Array(topic.checks.length).fill(null);
   const render = () => {
     const item = topic.checks[current];
     document.querySelector('#quiz-type').textContent = item.type;
-    document.querySelector('#quiz-question').textContent = item.question;
+    document.querySelector('#quiz-question').textContent = quizPromptEnglish(item, topic);
+    document.querySelector('#quiz-question-zh').textContent = item.question;
     document.querySelector('#quiz-count').textContent = `${current + 1} / ${topic.checks.length}`;
     document.querySelector('#completed-count').textContent = `已完成 ${answers.filter(value => value !== null).length} / ${topic.checks.length}`;
     document.querySelector('#quiz-dots').innerHTML = topic.checks.map((_, i) => `<button class="${i === current ? 'current' : ''} ${answers[i] !== null ? 'answered' : ''}" data-question="${i}" aria-label="自测第 ${i + 1} 题">${i + 1}</button>`).join('');
@@ -285,6 +306,12 @@ function setupQuiz(topic) {
       feedback.className = 'quiz-feedback visible';
       feedback.innerHTML = `<strong>${correct ? '✓ Correct · 回答正确' : '再想一想 · Not quite'}</strong><br>${item.feedback}`;
     } else { feedback.className = 'quiz-feedback'; feedback.textContent = ''; }
+    if (!bingoShown && answers.every((answer, index) => answer !== null && answer === topic.checks[index].answer)) {
+      bingoShown = true;
+      const bingo = document.querySelector('#quiz-bingo');
+      bingo.hidden = false;
+      bingo.classList.add('celebrate');
+    }
     document.querySelector('#next-question').textContent = current === topic.checks.length - 1 ? '回到第一题 ↻' : '下一题 →';
   };
   document.querySelector('#quick-check').addEventListener('click', event => {

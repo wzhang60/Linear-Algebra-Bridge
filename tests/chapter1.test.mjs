@@ -10,6 +10,7 @@ test('Chapter 1 contains the 12 approved topics', () => {
 
 test('the representative demo remains unique', () => {
   assert.deepEqual(topics.filter(topic => topic.demo).map(topic => topic.slug), ['elementary-row-operations']);
+  assert.equal(topicBySlug['elementary-row-operations'].ipa, '/ˌelɪˈmentəri roʊ ˌɑːpəˈreɪʃənz/');
 });
 
 test('every new topic has complete language-first content', () => {

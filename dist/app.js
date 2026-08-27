@@ -32,6 +32,7 @@ const questions = [
 
 let currentStep = 0;
 let currentQuestion = 0;
+let bingoShown = false;
 const answers = Array(questions.length).fill(null);
 
 const matrixHTML = rows => rows.map((row, rowIndex) => `<span class="row ${rowIndex ? 'row-two' : 'row-one'}">${row.map((value, i) => `<i class="${i === 2 ? 'aug' : ''}">${String(value).replace('-', '−')}</i>`).join('')}</span>`).join('');
@@ -80,7 +81,8 @@ document.querySelector('#classroom-grid').innerHTML = sentences.map((item, i) =>
 function renderQuestion() {
   const item = questions[currentQuestion];
   document.querySelector('#quiz-type').textContent = item.type;
-  document.querySelector('#quiz-question').textContent = item.question;
+  document.querySelector('#quiz-question').textContent = quizPromptEnglish(item);
+  document.querySelector('#quiz-question-zh').textContent = item.question;
   document.querySelector('#quiz-count').textContent = `${currentQuestion + 1} / ${questions.length}`;
   document.querySelector('#completed-count').textContent = `已完成 ${answers.filter(value => value !== null).length} / 4`;
   document.querySelector('#quiz-dots').innerHTML = questions.map((question, i) => `<button class="${i === currentQuestion ? 'current' : ''} ${answers[i] !== null ? 'answered' : ''}" data-question="${i}" aria-label="自测第 ${i + 1} 题">${i + 1}</button>`).join('');
@@ -91,7 +93,23 @@ function renderQuestion() {
     feedback.className = 'quiz-feedback visible';
     feedback.innerHTML = `<strong>${correct ? '✓ Correct · 回答正确' : '再想一想 · Not quite'}</strong><br>${item.feedback}`;
   } else { feedback.className = 'quiz-feedback'; feedback.textContent = ''; }
+  if (!bingoShown && answers.every((answer, index) => answer !== null && answer === questions[index].answer)) {
+    bingoShown = true;
+    const bingo = document.querySelector('#quiz-bingo');
+    bingo.hidden = false;
+    bingo.classList.add('celebrate');
+  }
   document.querySelector('#next-question').textContent = currentQuestion === 3 ? '回到第一题 ↻' : '下一题 →';
+}
+
+function quizPromptEnglish(item) {
+  const type = item.type.toLowerCase();
+  const quoted = item.question.match(/[“"]([^”"]+)[”"]/)?.[1];
+  if (type.includes('term match')) return `Which Chinese term matches “${quoted || 'the English term'}”?`;
+  if (type.includes('read')) return 'How should we read or interpret this notation?';
+  if (type.includes('classroom')) return 'What action does this classroom instruction ask for?';
+  if (type.includes('visual')) return 'Which visual pattern matches the definition?';
+  return 'Which statement best matches the concept?';
 }
 
 document.addEventListener('click', event => {

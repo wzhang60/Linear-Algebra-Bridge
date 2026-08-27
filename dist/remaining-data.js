@@ -5,17 +5,109 @@ const step = (phase, english, chinese, notation, main, sub, note) => ({ phase, e
 const slugify = text => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 const chapterMeta = {
-  3: { ipa: '/dɪˈtɜːrmɪnənt/', core: ['determinant', '行列式', '/dɪˈtɜːrmɪnənt/'] },
-  4: { ipa: '/ˈvektər speɪs əv en ˈtuːpəlz/', core: ['linear combination', '线性组合', '/ˈlɪniər ˌkɑːmbɪˈneɪʃən/'] },
-  5: { ipa: '/ˈvektər speɪs/', core: ['vector space', '线性空间', '/ˈvektər speɪs/'] },
-  6: { ipa: '/ˈaɪɡənvæljuː; ˈlɪniər ˌtrænsfərˈmeɪʃən/', core: ['linear transformation', '线性变换', '/ˈlɪniər ˌtrænsfərˈmeɪʃən/'] },
-  7: { ipa: '/juːˈklɪdiən speɪs; kwɑːˈdrætɪk fɔːrm/', core: ['inner product', '内积', '/ˈɪnər ˈprɑːdʌkt/'] }
+  3: { core: ['determinant', '行列式', '/dɪˈtɜːrmɪnənt/'] },
+  4: { core: ['linear combination', '线性组合', '/ˈlɪniər ˌkɑːmbɪˈneɪʃən/'] },
+  5: { core: ['vector space', '线性空间', '/ˈvektər speɪs/'] },
+  6: { core: ['linear transformation', '线性变换', '/ˈlɪniər ˌtrænsfərˈmeɪʃən/'] },
+  7: { core: ['inner product', '内积', '/ˈɪnər ˈprɑːdʌkt/'] }
+};
+
+const titleIpa = {
+  'Permutations and Inversions': '/ˌpɜːrmjuˈteɪʃənz ænd ɪnˈvɜːrʒənz/',
+  'Determinants of Order Two and Three': '/dɪˈtɜːrmɪnənts əv ˈɔːrdər tuː ænd θriː/',
+  'Definition of an n × n Determinant': '/ˌdefɪˈnɪʃən əv ən en baɪ en dɪˈtɜːrmɪnənt/',
+  'Determinant of the Transpose': '/dɪˈtɜːrmɪnənt əv ðə trænˈspoʊz/',
+  'Multilinearity and Alternating Properties': '/ˌmʌltɪlɪniˈærəti ænd ˈɔːltərneɪtɪŋ ˈprɑːpərtiz/',
+  'Effects of Elementary Row and Column Operations': '/ɪˈfekts əv ˌelɪˈmentəri roʊ ænd ˈkɑːləm ˌɑːpəˈreɪʃənz/',
+  'Computing Determinants by Triangularization': '/kəmˈpjuːtɪŋ dɪˈtɜːrmɪnənts baɪ traɪˌæŋɡjələrəˈzeɪʃən/',
+  'Minors, Cofactors, and Algebraic Cofactors': '/ˈmaɪnərz ˈkoʊfæktərz ænd ˌældʒəˈbreɪɪk ˈkoʊfæktərz/',
+  'Cofactor Expansion Theorem': '/ˈkoʊfæktər ɪkˈspænʃən ˈθiːərəm/',
+  'Computing Determinants by Reducing the Order': '/kəmˈpjuːtɪŋ dɪˈtɜːrmɪnənts baɪ rɪˈduːsɪŋ ði ˈɔːrdər/',
+  "Statement and Conditions of Cramer's Rule": '/ˈsteɪtmənt ænd kənˈdɪʃənz əv ˈkræmərz ruːl/',
+  "Solving Linear Systems with Cramer's Rule": '/ˈsɑːlvɪŋ ˈlɪniər ˈsɪstəmz wɪð ˈkræmərz ruːl/',
+  'Determinants as Signed Area and Volume Scaling': '/dɪˈtɜːrmɪnənts əz saɪnd ˈeriə ænd ˈvɑːljuːm ˈskeɪlɪŋ/',
+  'Examples of Determinants in Elementary Mathematics': '/ɪɡˈzæmpəlz əv dɪˈtɜːrmɪnənts ɪn ˌelɪˈmentəri ˌmæθəˈmætɪks/',
+  'Linear Combinations and Linear Representation': '/ˈlɪniər ˌkɑːmbɪˈneɪʃənz ænd ˈlɪniər ˌreprɪzenˈteɪʃən/',
+  'Determining Whether a Vector Has a Linear Representation': '/dɪˈtɜːrmɪnɪŋ ˈwɛðər ə ˈvektər hæz ə ˈlɪniər ˌreprɪzenˈteɪʃən/',
+  'Linear Dependence and Linear Independence': '/ˈlɪniər dɪˈpendəns ænd ˈlɪniər ˌɪndɪˈpendəns/',
+  'Criteria for Linear Dependence and Independence': '/kraɪˈtɪriə fər ˈlɪniər dɪˈpendəns ænd ˌɪndɪˈpendəns/',
+  'Fundamental Consequences of Dependence and Independence': '/ˌfʌndəˈmentəl ˈkɑːnsəkwensɪz əv dɪˈpendəns ænd ˌɪndɪˈpendəns/',
+  'Equivalent Sets of Vectors': '/ɪˈkwɪvələnt sets əv ˈvektərz/',
+  'Rank of a Set of Vectors': '/ræŋk əv ə set əv ˈvektərz/',
+  'Maximal Linearly Independent Subsets': '/ˈmæksɪməl ˈlɪniərli ˌɪndɪˈpendənt ˈsʌbsets/',
+  'Computing Rank and a Maximal Independent Subset': '/kəmˈpjuːtɪŋ ræŋk ænd ə ˈmæksɪməl ˌɪndɪˈpendənt ˈsʌbset/',
+  'Row Rank, Column Rank, and Matrix Rank': '/roʊ ræŋk ˈkɑːləm ræŋk ænd ˈmeɪtrɪks ræŋk/',
+  'The Vector Space of n-Tuples': '/ðə ˈvektər speɪs əv en ˈtuːpəlz/',
+  'Subspaces and the Subspace Test': '/ˈsʌbspeɪsɪz ænd ðə ˈsʌbspeɪs test/',
+  'Basis and Dimension of a Subspace': '/ˈbeɪsɪs ænd dɪˈmenʃən əv ə ˈsʌbspeɪs/',
+  'Row Space and Column Space': '/roʊ speɪs ænd ˈkɑːləm speɪs/',
+  'Linear Properties of Solutions to Homogeneous Systems': '/ˈlɪniər ˈprɑːpərtiz əv səˈluːʃənz tə ˌhoʊməˈdʒiːniəs ˈsɪstəmz/',
+  'Fundamental Solution Sets and the Dimension of the Solution Space': '/ˌfʌndəˈmentəl səˈluːʃən sets ænd ðə dɪˈmenʃən əv ðə səˈluːʃən speɪs/',
+  'General Solution of a Homogeneous Linear System': '/ˈdʒenərəl səˈluːʃən əv ə ˌhoʊməˈdʒiːniəs ˈlɪniər ˈsɪstəm/',
+  'General Solution of a Nonhomogeneous Linear System': '/ˈdʒenərəl səˈluːʃən əv ə ˌnɑːnhoʊməˈdʒiːniəs ˈlɪniər ˈsɪstəm/',
+  'Image and Kernel of a Matrix-Defined Linear Mapping': '/ˈɪmɪdʒ ænd ˈkɜːrnəl əv ə ˈmeɪtrɪks dɪˈfaɪnd ˈlɪniər ˈmæpɪŋ/',
+  'Dimensions of the Image and Kernel': '/dɪˈmenʃənz əv ði ˈɪmɪdʒ ænd ˈkɜːrnəl/',
+  'North American Datum Adjustment as a Linear Algebra Application': '/nɔːrθ əˈmerɪkən ˈdeɪtəm əˈdʒʌstmənt əz ə ˈlɪniər ˈældʒəbrə ˌæplɪˈkeɪʃən/',
+  'An Introduction to the Method of Least Squares': '/ən ˌɪntrəˈdʌkʃən tə ðə ˈmɛθəd əv liːst skwerz/',
+  'Definition and Basic Properties of a Vector Space': '/ˌdefɪˈnɪʃən ænd ˈbeɪsɪk ˈprɑːpərtiz əv ə ˈvektər speɪs/',
+  'Linear Subspaces and the Subspace Test': '/ˈlɪniər ˈsʌbspeɪsɪz ænd ðə ˈsʌbspeɪs test/',
+  'Sum and Intersection of Subspaces': '/sʌm ænd ˌɪntərˈsekʃən əv ˈsʌbspeɪsɪz/',
+  'Dimension Formula for the Sum of Subspaces': '/dɪˈmenʃən ˈfɔːrmjələ fər ðə sʌm əv ˈsʌbspeɪsɪz/',
+  'Basis and Dimension in a Finite-Dimensional Vector Space': '/ˈbeɪsɪs ænd dɪˈmenʃən ɪn ə ˌfaɪnaɪt daɪˈmenʃənəl ˈvektər speɪs/',
+  'Coordinates Relative to a Basis': '/koʊˈɔːrdənəts ˈrelətɪv tə ə ˈbeɪsɪs/',
+  'Linear Isomorphism and the Coordinate Method': '/ˈlɪniər aɪˈsɔːrfɪzəm ænd ðə koʊˈɔːrdənət ˈmɛθəd/',
+  'Change of Basis and Transition Matrices': '/tʃeɪndʒ əv ˈbeɪsɪs ænd trænˈzɪʃən ˈmeɪtrɪsiːz/',
+  'Coordinate Transformation Formula': '/koʊˈɔːrdənət ˌtrænsfərˈmeɪʃən ˈfɔːrmjələ/',
+  'Computing Transition Matrices and Coordinates in Typical Vector Spaces': '/kəmˈpjuːtɪŋ trænˈzɪʃən ˈmeɪtrɪsiːz ænd koʊˈɔːrdənəts ɪn ˈtɪpɪkəl ˈvektər speɪsɪz/',
+  'Using Coordinates to Test Dependence and Compute Rank': '/ˈjuːzɪŋ koʊˈɔːrdənəts tə test dɪˈpendəns ænd kəmˈpjuːt ræŋk/',
+  'Computing a Maximal Independent Subset by Coordinate Methods': '/kəmˈpjuːtɪŋ ə ˈmæksɪməl ˌɪndɪˈpendənt ˈsʌbset baɪ koʊˈɔːrdənət ˈmɛθədz/',
+  'Definition and Geometric Meaning of Eigenvalues and Eigenvectors': '/ˌdefɪˈnɪʃən ænd ˌdʒiːəˈmetrɪk ˈmiːnɪŋ əv ˈaɪɡənˌvæljuːz ænd ˈaɪɡənˌvektərz/',
+  'Computing Eigenvalues and Eigenvectors': '/kəmˈpjuːtɪŋ ˈaɪɡənˌvæljuːz ænd ˈaɪɡənˌvektərz/',
+  'Properties of Eigenvalues and Eigenvectors': '/ˈprɑːpərtiz əv ˈaɪɡənˌvæljuːz ænd ˈaɪɡənˌvektərz/',
+  'Algebraic Multiplicity and Geometric Multiplicity': '/ˌældʒəˈbreɪɪk ˌmʌltəˈplɪsəti ænd ˌdʒiːəˈmetrɪk ˌmʌltəˈplɪsəti/',
+  'Similar Matrices and Properties of Similarity': '/ˈsɪmələr ˈmeɪtrɪsiːz ænd ˈprɑːpərtiz əv ˌsɪməˈlærəti/',
+  'Conditions for Diagonalizability': '/kənˈdɪʃənz fər daɪˌæɡənəlaɪzəˈbɪləti/',
+  'Diagonalizing a Matrix': '/daɪˈæɡənəlaɪzɪŋ ə ˈmeɪtrɪks/',
+  'Computing Powers of a Matrix by Diagonalization': '/kəmˈpjuːtɪŋ ˈpaʊərz əv ə ˈmeɪtrɪks baɪ daɪˌæɡənəlaɪˈzeɪʃən/',
+  'Real Symmetric Matrices and Orthogonal Diagonalization': '/riːəl sɪˈmetrɪk ˈmeɪtrɪsiːz ænd ˌɔːrθəˈɡɑːnəl daɪˌæɡənəlaɪˈzeɪʃən/',
+  'Definition and Properties of Linear Transformations': '/ˌdefɪˈnɪʃən ænd ˈprɑːpərtiz əv ˈlɪniər ˌtrænsfərˈmeɪʃənz/',
+  'Matrix of a Linear Transformation Relative to a Basis': '/ˈmeɪtrɪks əv ə ˈlɪniər ˌtrænsfərˈmeɪʃən ˈrelətɪv tə ə ˈbeɪsɪs/',
+  'Matrices of the Same Transformation in Different Bases': '/ˈmeɪtrɪsiːz əv ðə seɪm ˌtrænsfərˈmeɪʃən ɪn ˈdɪfərənt ˈbeɪsɪz/',
+  'Coordinates of Preimages and Images': '/koʊˈɔːrdənəts əv ˌpriːˈɪmɪdʒɪz ænd ˈɪmɪdʒɪz/',
+  'Applications of Eigenvalue Theory': '/ˌæplɪˈkeɪʃənz əv ˈaɪɡənˌvæljuː ˈθiːəri/',
+  'Applications of Linear Transformations': '/ˌæplɪˈkeɪʃənz əv ˈlɪniər ˌtrænsfərˈmeɪʃənz/',
+  'Inner Products and Euclidean Spaces': '/ˈɪnər ˈprɑːdʌkts ænd juːˈklɪdiən ˈspeɪsɪz/',
+  'Gram Matrix of an Inner Product': '/ɡræm ˈmeɪtrɪks əv ən ˈɪnər ˈprɑːdʌkt/',
+  'Cauchy-Schwarz Inequality, Length, and Orthogonality': '/ˌkoʊʃi ˈʃwɔːrts ˌɪnɪˈkwɑːləti leŋθ ænd ˌɔːrθəɡəˈnæləti/',
+  'Orthogonal Sets and Orthonormal Bases': '/ˌɔːrθəˈɡɑːnəl sets ænd ˌɔːrθəˈnɔːrməl ˈbeɪsɪz/',
+  'Gram-Schmidt Orthogonalization': '/ɡræm ʃmɪt ˌɔːrθəɡənəlaɪˈzeɪʃən/',
+  'QR Decomposition: An Introduction': '/ˌkjuː ˈɑːr ˌdiːkɑːmpəˈzɪʃən ən ˌɪntrəˈdʌkʃən/',
+  'Computing Inner Products in Euclidean Spaces': '/kəmˈpjuːtɪŋ ˈɪnər ˈprɑːdʌkts ɪn juːˈklɪdiən ˈspeɪsɪz/',
+  'Orthogonal Transformations and Their Geometric Meaning': '/ˌɔːrθəˈɡɑːnəl ˌtrænsfərˈmeɪʃənz ænd ðer ˌdʒiːəˈmetrɪk ˈmiːnɪŋ/',
+  'Criteria for an Orthogonal Transformation': '/kraɪˈtɪriə fər ən ˌɔːrθəˈɡɑːnəl ˌtrænsfərˈmeɪʃən/',
+  'Equivalent Definitions and Properties of Orthogonal Matrices': '/ɪˈkwɪvələnt ˌdefɪˈnɪʃənz ænd ˈprɑːpərtiz əv ˌɔːrθəˈɡɑːnəl ˈmeɪtrɪsiːz/',
+  'Symmetric Transformations and Their Criteria': '/sɪˈmetrɪk ˌtrænsfərˈmeɪʃənz ænd ðer kraɪˈtɪriə/',
+  'Symmetric Transformations and Real Symmetric Matrices': '/sɪˈmetrɪk ˌtrænsfərˈmeɪʃənz ænd riːəl sɪˈmetrɪk ˈmeɪtrɪsiːz/',
+  'Properties of Real Symmetric Matrices': '/ˈprɑːpərtiz əv riːəl sɪˈmetrɪk ˈmeɪtrɪsiːz/',
+  'Orthogonal Diagonalization of Real Symmetric Matrices': '/ˌɔːrθəˈɡɑːnəl daɪˌæɡənəlaɪˈzeɪʃən əv riːəl sɪˈmetrɪk ˈmeɪtrɪsiːz/',
+  'Quadratic Forms and Their Matrix Representation': '/ˈkwɑːdrætɪk fɔːrmz ænd ðer ˈmeɪtrɪks ˌreprɪzenˈteɪʃən/',
+  'Rank of a Quadratic Form': '/ræŋk əv ə ˈkwɑːdrætɪk fɔːrm/',
+  'Equivalence of Quadratic Forms and Matrix Congruence': '/ɪˈkwɪvələns əv ˈkwɑːdrætɪk fɔːrmz ænd ˈmeɪtrɪks ˈkɑːŋɡruəns/',
+  'Orthogonal Change of Variables to Standard Form': '/ˌɔːrθəˈɡɑːnəl tʃeɪndʒ əv ˈveriəbəlz tə ˈstændərd fɔːrm/',
+  'Completing the Square and Elementary-Transformation Methods': '/kəmˈpliːtɪŋ ðə skwer ænd ˌelɪˈmentəri ˌtrænsfərˈmeɪʃən ˈmɛθədz/',
+  'Canonical Form, Inertia Indices, and Signature': '/kəˈnɑːnɪkəl fɔːrm ɪˈnɜːrʃə ˈɪndɪsiːz ænd ˈsɪɡnətʃər/',
+  "Sylvester's Law of Inertia and Congruence Criteria": '/sɪlˈvɛstərz lɔː əv ɪˈnɜːrʃə ænd ˈkɑːŋɡruəns kraɪˈtɪriə/',
+  'Positive Definite Quadratic Forms and Matrices': '/ˈpɑːzətɪv dɪˈfaɪnət ˈkwɑːdrætɪk fɔːrmz ænd ˈmeɪtrɪsiːz/',
+  'Properties of Positive Definite Matrices': '/ˈprɑːpərtiz əv ˈpɑːzətɪv dɪˈfaɪnət ˈmeɪtrɪsiːz/',
+  'Criteria for Positive Definiteness': '/kraɪˈtɪriə fər ˈpɑːzətɪv dɪˈfaɪnətnəs/'
 };
 
 const modeFor = family => family === 'Procedure' ? 'sequence' : family === 'Transformation' ? 'transformation' : family === 'Structure' ? 'structure' : 'compare';
 
 function makeTopic(chapter, section, title, zh, family, formula, definition, chinese, example, options = {}) {
   const meta = chapterMeta[chapter];
+  const ipa = titleIpa[title];
+  if (!ipa) throw new Error(`Missing IPA for ${title}`);
   const mode = options.mode || modeFor(family);
   const sequential = mode === 'sequence';
   const phases = sequential ? ['PREPARE · 准备', 'APPLY · 执行', 'INTERPRET · 解释'] : ['IDENTIFY · 识别', 'INSPECT · 检查', 'CONNECT · 连接'];
@@ -25,14 +117,14 @@ function makeTopic(chapter, section, title, zh, family, formula, definition, chi
     step(phases[2], 'Connect the evidence to the conclusion.', '把可见证据与结论连接起来。', options.conclusion || formula, options.conclusion || formula, 'definition → evidence → conclusion', 'The conclusion follows from the displayed condition, not from appearance alone.')
   ];
   const vocab = [
-    [title, zh, meta.ipa, definition],
+    [title, zh, ipa, definition],
     meta.core,
     ['condition', '条件', '/kənˈdɪʃən/', 'A requirement that must be checked before using a definition or theorem.'],
     ['interpret', '解释 / 说明含义', '/ɪnˈtɜːrprət/', 'State what the mathematical result means in context.']
   ];
   return {
     chapter, section, slug: `c${chapter}-${slugify(title)}`, family, extended: Boolean(options.extended),
-    title, zh, ipa: meta.ipa, description: definition, chinese, academic: definition, professional: chinese,
+    title, zh, ipa, description: definition, chinese, academic: definition, professional: chinese,
     intuition: `先听清关键词，再把课堂句子与 ${formula} 的条件和动作对应起来；不要只凭图形外观判断。`,
     hero: `<div class="matrix-concept-hero"><strong>${formula}</strong><span>${example}</span></div>`,
     question: options.question || `What condition makes this statement valid?`, questionZh: options.questionZh || '这个结论成立需要什么条件？',

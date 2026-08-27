@@ -197,7 +197,8 @@ export const topics = [
   },
   {
     slug: 'elementary-row-operations', section: '1.2', family: 'Procedure',
-    title: 'Elementary Row Operations', zh: '初等行变换与行阶梯形矩阵', demo: true
+    title: 'Elementary Row Operations', zh: '初等行变换与行阶梯形矩阵',
+    ipa: '/ˌelɪˈmentəri roʊ ˌɑːpəˈreɪʃənz/', demo: true
   },
   {
     slug: 'gaussian-elimination', section: '1.2', family: 'Procedure',

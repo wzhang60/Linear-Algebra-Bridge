@@ -30,6 +30,17 @@ test('every remaining topic satisfies the complete page contract', () => {
   }
 });
 
+test('each generated topic uses its own title pronunciation', () => {
+  for (const topic of remainingTopics) {
+    assert.equal(topic.vocab[0][0], topic.title, `${topic.slug}: title vocabulary`);
+    assert.equal(topic.vocab[0][2], topic.ipa, `${topic.slug}: title IPA`);
+  }
+  assert.equal(remainingTopicBySlug['c3-permutations-and-inversions'].ipa, '/ˌpɜːrmjuˈteɪʃənz ænd ɪnˈvɜːrʒənz/');
+  for (const chapter of [3, 4, 5, 6, 7]) {
+    assert.ok(new Set(remainingTopics.filter(topic => topic.chapter === chapter).map(topic => topic.ipa)).size > 1, `Chapter ${chapter}: distinct title IPA`);
+  }
+});
+
 test('extended reading appears only in approved sections', () => {
   const extendedSections = new Set(['3.5', '4.5', '6.4']);
   assert.ok(remainingTopics.filter(topic => topic.extended).every(topic => extendedSections.has(topic.section)));
